@@ -16,3 +16,11 @@ Running ROS2 Jazzy
 ## Source
 * Run this first in every terminal
 * source /opt/ros/jazzy/setup.bash
+
+## USB
+* To find USB ports
+* sudo dmesg | grep tty
+
+## Packages
+* gps_publisher
+** gps_node.py
