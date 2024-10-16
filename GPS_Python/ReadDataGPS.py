@@ -8,7 +8,7 @@ ser = serial.Serial(
     # for windows 
     port = 'COM4',
     baudrate=9600,        # GPS modules commonly use 9600 or 115200 baud
-    timeout=1             # 1 second timeout for serial communication
+    timeout=0.1             # 1 second timeout for serial communication
 )
 
 def read_gps():
@@ -19,7 +19,7 @@ def read_gps():
             
             # Only process lines starting with $G, which are NMEA sentences
             if gps_data.startswith('$G'):
-                print(f"Received GPS data: {gps_data}")
+                # print(f"Received GPS data: {gps_data}")
                 parse_nmea(gps_data)
             time.sleep(1)
 
@@ -41,9 +41,12 @@ def parse_nmea(nmea_sentence):
         num_sats = parts[7]      # Number of satellites being tracked
         altitude = parts[9]      # Altitude above mean sea level
         
-        print(f"Time: {time_utc}, Latitude: {latitude} {lat_dir}, "
-              f"Longitude: {longitude} {long_dir}, Altitude: {altitude} meters, "
-              f"Satellites: {num_sats}, Fix: {fix_quality}")
+        # print(f"Time: {time_utc}, Latitude: {latitude} {lat_dir}, "
+        #       f"Longitude: {longitude} {long_dir}, Altitude: {altitude} meters, "
+        #       f"Satellites: {num_sats}, Fix: {fix_quality}")
+        print(f"Latitude: {latitude:f} {lat_dir}, Longitude: {longitude:f} {long_dir}")
+
+
 
 if __name__ == "__main__":
     try:

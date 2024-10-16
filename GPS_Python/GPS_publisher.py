@@ -11,7 +11,7 @@ ser = serial.Serial(
     # for windows 
     port='COM4',  # Change this to your GPS module's serial port
     baudrate=9600,  # GPS modules commonly use 9600 or 115200 baud
-    timeout=0.1  # 1 second timeout for serial communication
+    timeout=0.1  # 0.1 second timeout for serial communication
 )
 
 class GPSPublisher(Node):
