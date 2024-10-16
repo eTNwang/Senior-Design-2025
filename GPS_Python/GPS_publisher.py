@@ -23,7 +23,7 @@ class GPSPublisher(Node):
         self.longitude_publisher = self.create_publisher(Float64, 'gps/longitude', 10)
         
         # Start reading data from GPS
-        self.timer = self.create_timer(1.0, self.read_gps_data)  # Timer to read data every second
+        self.timer = self.create_timer(0.1, self.read_gps_data)  # Timer to read data every 1/10th of a second
 
     def read_gps_data(self):
         if ser.in_waiting > 0:
