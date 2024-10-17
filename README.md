@@ -22,5 +22,8 @@ Running ROS2 Jazzy
 * sudo dmesg | grep tty
 
 ## Packages
-* gps_publisher
-** gps_node.py
+https://github.com/jakedonnini/Hue_Ros_Packages
+
+
+Offical packages are stored in this repo
+
