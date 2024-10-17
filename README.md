@@ -13,6 +13,11 @@
 <h1>ROS2</h1>
 Running ROS2 Jazzy
 
+## Notes
+* In ~/ros2_ws/src$ run 'colcon build' after changing the packages
+* In ~/ros2_ws/src$ source install/local_setup.bash
+* ros2 run <package> <node>
+
 ## Source
 * Run this first in every terminal
 * source /opt/ros/jazzy/setup.bash
