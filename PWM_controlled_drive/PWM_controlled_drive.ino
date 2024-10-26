@@ -82,5 +82,5 @@ void displayDesiredSpeedsOnLCD() {
 
 void controlMotors() {
 
-    motors.setSpeeds(desiredSpeedR, desiredSpeedR);
+    motors.setSpeeds(desiredSpeedL, desiredSpeedR);
 }
