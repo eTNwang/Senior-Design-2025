@@ -7,8 +7,8 @@ ser = serial.Serial(
     # port='/dev/ttyUSB0',  # Update this to your GPS module's serial port
     # for windows 
     port = 'COM4',
-    baudrate=9600,        # GPS modules commonly use 9600 or 115200 baud
-    timeout=0.1             # 1 second timeout for serial communication
+    baudrate=9600        # GPS modules commonly use 9600 or 115200 baud
+    # timeout=1             # 1 second timeout for serial communication
 )
 
 def read_gps():
@@ -21,11 +21,11 @@ def read_gps():
             if gps_data.startswith('$G'):
                 # print(f"Received GPS data: {gps_data}")
                 parse_nmea(gps_data)
-            time.sleep(1)
+            # time.sleep(1)
 
 def parse_nmea(nmea_sentence):
     # Example: Parse a GGA sentence (for latitude, longitude, altitude)
-    if nmea_sentence.startswith('$GPGGA'):
+    if nmea_sentence.startswith('$GNGGA') or nmea_sentence.startswith('$GPGGA'):
         parts = nmea_sentence.split(',')
         
         if len(parts) < 15:
@@ -41,10 +41,10 @@ def parse_nmea(nmea_sentence):
         num_sats = parts[7]      # Number of satellites being tracked
         altitude = parts[9]      # Altitude above mean sea level
         
-        # print(f"Time: {time_utc}, Latitude: {latitude} {lat_dir}, "
-        #       f"Longitude: {longitude} {long_dir}, Altitude: {altitude} meters, "
-        #       f"Satellites: {num_sats}, Fix: {fix_quality}")
-        print(f"Latitude: {latitude:f} {lat_dir}, Longitude: {longitude:f} {long_dir}")
+        print(f"Time: {time_utc}, Latitude: {latitude} {lat_dir}, "
+              f"Longitude: {longitude} {long_dir}, Altitude: {altitude} meters, "
+              f"Satellites: {num_sats}, Fix: {fix_quality}")
+        # print(f"Latitude: {latitude:f} {lat_dir}, Longitude: {longitude:f} {long_dir}")
 
 
 
