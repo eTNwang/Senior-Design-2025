@@ -1,15 +1,12 @@
+#include <Servo.h>
+
 // Pin assignments
 const int encoderLeftPinA = 19;
 const int encoderLeftPinB = 18;
 const int encoderRightPinA = 2;
 const int encoderRightPinB = 3;
-const int motorLeftPWMPin = 6;
-const int motorRightPWMPin = 7;
-
-// PID control variables
-float Kp = 0.5, Ki = 0.0, Kd = 0.0; // Tune these values as necessary
-float previousErrorR = 0, integralR = 0;
-float previousErrorL = 0, integralL = 0;
+const int motorLeftPWMPin = 8; // 1 and 2
+const int motorRightPWMPin = 9; // 3 and 4
 
 int desiredSpeedR = 0;  // Target speed for right wheel (from serial input)
 int desiredSpeedL = 0;  // Target speed for left wheel (from serial input)
@@ -21,6 +18,9 @@ volatile int encoderCountRight = 0;
 unsigned long lastSampleTime = 0;
 const unsigned long sampleInterval = 100;  // 100 ms sampling time
 
+Servo motorLeft;
+Servo motorRight;
+
 void setup() {
     Serial.begin(115200);  // Set the baud rate for serial communication
     while (!Serial) {
@@ -28,8 +28,8 @@ void setup() {
     }
 
     // Set up motor control pins
-    pinMode(motorLeftPWMPin, OUTPUT);
-    pinMode(motorRightPWMPin, OUTPUT);
+    motorLeft.attach(motorLeftPWMPin);
+    motorRight.attach(motorRightPWMPin);
 
     // Set up encoder pins
     pinMode(encoderLeftPinA, INPUT);
@@ -83,25 +83,16 @@ void parseSerialInput(String input) {
 
 // Function to control motors using PWM
 void controlMotors() {
-    // Convert desired speed to PWM values (mapping speed range if necessary)
-    int pwmL = constrain(desiredSpeedL, -255, 255);
-    int pwmR = constrain(desiredSpeedR, -255, 255);
+    int const offset = 250;
+    // Rev: 1000<p<1475 for: 1525<p<2000
+    int pwmL = map(desiredSpeedL, -255, 255, 1000+offset, 2000-offset); // convert ot microseconds
+    int pwmR = map(desiredSpeedR, -255, 255, 1000+offset, 2000-offset);
 
     // Set motor PWM for left motor
-    analogWrite(motorLeftPWMPin, abs(pwmL));
-    if (pwmL < 0) {
-        digitalWrite(motorLeftPWMPin, LOW);  // Reverse direction if needed
-    } else {
-        digitalWrite(motorLeftPWMPin, HIGH);
-    }
+    motorLeft.writeMicroseconds(pwmL);
 
     // Set motor PWM for right motor
-    analogWrite(motorRightPWMPin, abs(pwmR));
-    if (pwmR < 0) {
-        digitalWrite(motorRightPWMPin, LOW);  // Reverse direction if needed
-    } else {
-        digitalWrite(motorRightPWMPin, HIGH);
-    }
+    motorRight.writeMicroseconds(pwmR);
 }
 
 // Interrupt Service Routine (ISR) for the left encoder
