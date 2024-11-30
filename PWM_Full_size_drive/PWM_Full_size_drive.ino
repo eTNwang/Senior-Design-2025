@@ -5,8 +5,8 @@ const int encoderLeftPinA = 19;
 const int encoderLeftPinB = 18;
 const int encoderRightPinA = 2;
 const int encoderRightPinB = 3;
-const int motorLeftPWMPin = 8; // 1 and 2
-const int motorRightPWMPin = 9; // 3 and 4
+const int motorLeftPWMPin = 5; // 1 and 2
+const int motorRightPWMPin = 7; // 3 and 4
 
 int desiredSpeedR = 0;  // Target speed for right wheel (from serial input)
 int desiredSpeedL = 0;  // Target speed for left wheel (from serial input)
@@ -64,7 +64,8 @@ void loop() {
         
         Serial.print(actualSpeedR);
         Serial.print(" ");
-        Serial.println(actualSpeedL);
+        // invert left encoder too
+        Serial.println(-1*actualSpeedL);
     }
 }
 
@@ -83,9 +84,10 @@ void parseSerialInput(String input) {
 
 // Function to control motors using PWM
 void controlMotors() {
-    int const offset = 250;
+    const int offset = 250;
     // Rev: 1000<p<1475 for: 1525<p<2000
-    int pwmL = map(desiredSpeedL, -255, 255, 1000+offset, 2000-offset); // convert ot microseconds
+    // invewrt the Left speed 
+    int pwmL = map(-1*desiredSpeedL, -255, 255, 1000+offset, 2000-offset); // convert ot microseconds
     int pwmR = map(desiredSpeedR, -255, 255, 1000+offset, 2000-offset);
 
     // Set motor PWM for left motor
