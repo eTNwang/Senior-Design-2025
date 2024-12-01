@@ -24,7 +24,7 @@ Running ROS2 Jazzy
 
 ## USB
 * To find USB ports
-* sudo dmesg | grep tty
+* ls -l /dev/ttyACM*
 
 ## Packages
 https://github.com/jakedonnini/Hue_Ros_Packages
