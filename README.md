@@ -6,7 +6,7 @@
 * Hostname: hue-robot
 
 ## SSH
-* ssh hue@10.0.0.184 -p 22
+* ssh hue@hue-robot.local
 * port could also be 2222
 * IP may change
 
