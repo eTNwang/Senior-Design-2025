@@ -7,9 +7,13 @@ const int encoderRightPinA = 2;
 const int encoderRightPinB = 3;
 const int motorLeftPWMPin = 5; // 1 and 2
 const int motorRightPWMPin = 7; // 3 and 4
+const int togglePin = 13;       // GPIO pin for toggling (e.g., an LED)
 
 int desiredSpeedR = 0;  // Target speed for right wheel (from serial input)
 int desiredSpeedL = 0;  // Target speed for left wheel (from serial input)
+int toggleValue = 0;    // Third value for toggling GPIO pin
+
+bool toggleState = false;  // State of the toggle pin
 
 // Encoder counters
 volatile int encoderCountLeft = 0;
@@ -36,6 +40,10 @@ void setup() {
     pinMode(encoderLeftPinB, INPUT);
     pinMode(encoderRightPinA, INPUT);
     pinMode(encoderRightPinB, INPUT);
+
+    // Set up toggle pin
+    pinMode(togglePin, OUTPUT);
+    digitalWrite(togglePin, LOW);  // Initialize the pin to LOW
 
     // Attach interrupts for encoders
     attachInterrupt(digitalPinToInterrupt(encoderLeftPinA), updateEncoderLeft, CHANGE);
@@ -64,21 +72,31 @@ void loop() {
         
         Serial.print(actualSpeedR);
         Serial.print(" ");
-        // invert left encoder too
-        Serial.println(-1*actualSpeedL);
+        Serial.print(-1*actualSpeedL); // invert left encoder too
+        Serial.print(" ");
+        Serial.println(toggleState ? 1 : 0); // Send toggle state
     }
 }
 
 // Function to parse the serial input "SpeedR SpeedL"
 void parseSerialInput(String input) {
-    int spaceIndex = input.indexOf(' ');
-    
-    if (spaceIndex != -1) {
-        String rightStr = input.substring(0, spaceIndex);
-        String leftStr = input.substring(spaceIndex + 1);
+    int firstSpaceIndex = input.indexOf(' ');
+    int secondSpaceIndex = input.indexOf(' ', firstSpaceIndex + 1);
+      
+    if (firstSpaceIndex != -1 && secondSpaceIndex != -1) {
+        String rightStr = input.substring(0, firstSpaceIndex);
+        String leftStr = input.substring(firstSpaceIndex + 1, secondSpaceIndex);
+        String toggleStr = input.substring(secondSpaceIndex + 1);
 
         desiredSpeedR = rightStr.toInt();  // Convert string to integer
-        desiredSpeedL = leftStr.toInt();   // Convert string to integer
+        desiredSpeedL = leftStr.toInt();  // Convert string to integer
+        toggleValue = toggleStr.toInt();  // Convert string to integer
+
+        // Check toggle value and update GPIO pin state
+        if (toggleValue == 1) {
+            toggleState = !toggleState; // Toggle the state
+            digitalWrite(togglePin, toggleState ? HIGH : LOW);
+        }
     }
 }
 
