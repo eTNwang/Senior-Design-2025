@@ -7,7 +7,8 @@ const int encoderRightPinA = 2;
 const int encoderRightPinB = 3;
 const int motorLeftPWMPin = 5; // 1 and 2
 const int motorRightPWMPin = 7; // 3 and 4
-const int togglePin = 13;       // GPIO pin for toggling (e.g., an LED)
+const int sprayerPinA = 13;       // GPIO pin for toggling (e.g., an LED)
+const int sprayerPinB = 12;       // one of these pins should be low and the other high to spray
 
 int desiredSpeedR = 0;  // Target speed for right wheel (from serial input)
 int desiredSpeedL = 0;  // Target speed for left wheel (from serial input)
@@ -42,8 +43,9 @@ void setup() {
     pinMode(encoderRightPinB, INPUT);
 
     // Set up toggle pin
-    pinMode(togglePin, OUTPUT);
-    digitalWrite(togglePin, LOW);  // Initialize the pin to LOW
+    pinMode(sprayerPinA, OUTPUT);
+    pinMode(sprayerPinB, OUTPUT);
+    stopSprayer();
 
     // Attach interrupts for encoders
     attachInterrupt(digitalPinToInterrupt(encoderLeftPinA), updateEncoderLeft, CHANGE);
@@ -95,9 +97,24 @@ void parseSerialInput(String input) {
         // Check toggle value and update GPIO pin state
         if (toggleValue == 1) {
             toggleState = !toggleState; // Toggle the state
-            digitalWrite(togglePin, toggleState ? HIGH : LOW);
+            if (toggleState == 1) {
+              startSprayer();
+            } else {
+              stopSprayer();
+            }
         }
     }
+}
+
+void startSprayer() {
+  digitalWrite(sprayerPinA, LOW);
+  digitalWrite(sprayerPinB, HIGH);
+}
+
+void stopSprayer() {
+  // black is closed when off and red is open 
+  digitalWrite(sprayerPinA, HIGH);
+  digitalWrite(sprayerPinB, LOW);
 }
 
 // Function to control motors using PWM
