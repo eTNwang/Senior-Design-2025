@@ -32,3 +32,7 @@ https://github.com/jakedonnini/Hue_Ros_Packages
 
 Offical packages are stored in this repo
 
+## Teleop
+* ros2 run teleop_twist_keyboard teleop_twist_keyboard
+* Run this node as your keyboard input to the robot
+
