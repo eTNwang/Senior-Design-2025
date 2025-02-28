@@ -28,8 +28,8 @@ Running ROS2 Jazzy
 * Made static versions
 * ls -l /dev/ttyRobot*
 * Enable (should be on by default)
-** sudo udevadm control --reload-rules
-** sudo udevadm trigger
+* * sudo udevadm control --reload-rules
+* * sudo udevadm trigger
 * sudo nano /etc/udev/rules.d/99-usb-serial.rules
 
 ## Packages
