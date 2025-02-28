@@ -25,6 +25,12 @@ Running ROS2 Jazzy
 ## USB
 * To find USB ports
 * ls -l /dev/ttyACM*
+* Made static versions
+* ls -l /dev/ttyRobot*
+* Enable (should be on by default)
+** sudo udevadm control --reload-rules
+** sudo udevadm trigger
+* sudo nano /etc/udev/rules.d/99-usb-serial.rules
 
 ## Packages
 https://github.com/jakedonnini/Hue_Ros_Packages
